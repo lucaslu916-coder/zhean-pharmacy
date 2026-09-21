@@ -3,13 +3,14 @@ import { buildVCard } from "./vcard.js";
 import { deliveryPlan } from "./save-strategy.js";
 import { statusAt, rangesFor, formatMinutes, taipeiParts } from "./hours.js";
 import { mapsUrl } from "./maps.js";
+import { readSaved, writeSaved, resolveTheme, nextTheme } from "./theme.js";
 
 /* ────────────────────────────────────────────────────────────
    介面文字（三語）。名片內容在 config.js，這裡只放介面用語。
    ──────────────────────────────────────────────────────────── */
 const UI = {
   zh: {
-    htmlLang: "zh-Hant", langAria: "語言切換",
+    htmlLang: "zh-Hant", langAria: "語言切換", themeDark: "深色模式",
     weekdays: ["週日", "週一", "週二", "週三", "週四", "週五", "週六"],
     callLabel: "撥打電話", mapLabel: "開啟導航",
     hoursStep: "營業時間", hoursTitle: "每週營業時間", closed: "公休",
@@ -38,7 +39,7 @@ const UI = {
     shareTitle: "喆安藥行 聯絡人名片",
   },
   en: {
-    htmlLang: "en", langAria: "Language",
+    htmlLang: "en", langAria: "Language", themeDark: "Dark mode",
     weekdays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     callLabel: "Call us", mapLabel: "Get directions",
     hoursStep: "HOURS", hoursTitle: "Opening hours", closed: "Closed",
@@ -67,7 +68,7 @@ const UI = {
     shareTitle: "Contact card for Zhe-An Pharmacy",
   },
   ja: {
-    htmlLang: "ja", langAria: "言語切り替え",
+    htmlLang: "ja", langAria: "言語切り替え", themeDark: "ダークモード",
     weekdays: ["日曜", "月曜", "火曜", "水曜", "木曜", "金曜", "土曜"],
     callLabel: "電話をかける", mapLabel: "経路を開く",
     hoursStep: "営業時間", hoursTitle: "営業時間", closed: "定休",
@@ -184,6 +185,8 @@ function render() {
   $("pharmacist").textContent = `${p.pharmacist.title[language]}　${p.pharmacist.display[language]}`;
 
   $("lang-group").setAttribute("aria-label", t.langAria);
+  $("theme-toggle").setAttribute("aria-label", t.themeDark);
+  $("theme-toggle").title = t.themeDark;
   document.querySelectorAll("[data-t]").forEach((el) => {
     const key = el.dataset.t;
     if (typeof t[key] === "string") el.textContent = t[key];
@@ -364,6 +367,32 @@ async function saveContact() {
 }
 
 /* ──────────────────────────────────────────────────────────── */
+/* ────────────────────────────────────────────────────────────
+   深淺色主題
+   <head> 的小腳本已經先套好 data-theme；這裡負責切換鈕與跟隨系統。
+   ──────────────────────────────────────────────────────────── */
+const systemDark = window.matchMedia?.("(prefers-color-scheme: dark)");
+const storage = (() => { try { return window.localStorage; } catch { return null; } })();
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  // 按鈕標籤固定是「深色模式」，aria-pressed 表示現在是不是開著——讀屏軟體會唸「深色模式，已按下」
+  $("theme-toggle").setAttribute("aria-pressed", String(theme === "dark"));
+}
+
+applyTheme(resolveTheme(readSaved(storage), systemDark?.matches));
+
+$("theme-toggle").addEventListener("click", () => {
+  const theme = nextTheme(document.documentElement.getAttribute("data-theme"));
+  writeSaved(storage, theme);
+  applyTheme(theme);
+});
+
+// 客人沒按過切換鈕時，手機系統切深淺色，頁面跟著變；按過就尊重他的選擇
+systemDark?.addEventListener?.("change", (e) => {
+  if (!readSaved(storage)) applyTheme(e.matches ? "dark" : "light");
+});
+
 document.querySelectorAll("#lang-group button").forEach((b) => {
   b.addEventListener("click", () => {
     language = b.dataset.lang;

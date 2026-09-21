@@ -12,28 +12,79 @@ a { color: inherit; }
 [hidden] { display: none !important; }
 
 :root {
-  /* 色票取自店家照片。改色改這裡。 */
-  --ink: #2B2320;          /* 墨黑：內文，帶褐不用純黑 */
-  --muted: #6E5F54;
-  --wood: #4A3524;         /* 藥櫃棕：主色 */
+  color-scheme: light;
+
+  /* ── 品牌色：取自店家照片，深淺兩種主題都不變 ──
+     店招、撥打電話、印章、LINE 按鈕用的是這組。店招本來就是深底，換主題不必動。 */
+  --wood: #4A3524;         /* 藥櫃棕 */
   --wood-dark: #3A2A1C;
   --vermilion: #A83232;    /* 招牌朱紅：全頁唯一的主要動作 */
-  --paper: #F4EFE4;        /* 瓷罐米白：卡片底 */
-  --pale: #EDE4D4;
-  --line: #DCCFBB;
-  --brass: #B08D57;        /* 銅杵黃銅：分隔線與細節 */
-  --brass-ink: #8A6A3A;    /* 黃銅當文字色要壓深才夠對比 */
-  --open: #2F5A43;         /* 雨棚墨綠：營業中 */
-  --closed: #6B5E52;       /* 休息中刻意不用紅——紅是招牌色與主按鈕，不能拿去表示關門 */
-  --soon: #7A5514;
+  --paper: #F4EFE4;        /* 瓷罐米白 */
+  --brass: #B08D57;        /* 銅杵黃銅 */
+  --open: #2F5A43;         /* 雨棚墨綠 */
+
+  /* ── 用途色：淺色主題 ──
+     跟品牌色分開的原因：--paper 同時被當底色與「深底上的字色」使用，
+     深色主題若直接把 --paper 翻成深色，存聯絡人按鈕的字就會變成深字壓深底。 */
+  --bg-page: #E7DECB;
+  --bg-glow: rgba(176, 141, 87, .16);
+  --bg-card: #F4EFE4;
+  --bg-panel: #FBF7EF;
+  --bg-surface: #F4EFE4;
+  --bg-highlight: #EDE4D4;
+  --border: #DCCFBB;
+  --text: #2B2320;         /* 墨黑，帶褐不用純黑 */
+  --text-muted: #6E5F54;
+  --text-strong: #3A2A1C;
+  --text-accent: #8A6A3A;  /* 黃銅當字色要壓深才夠對比 */
+  --text-closed: #6B5E52;  /* 休息中刻意不用紅——紅是招牌色與主按鈕，不能拿去表示關門 */
+  --btn-bg: #4A3524;
+  --btn-fg: #F4EFE4;
+  --btn-shadow: rgba(74, 53, 36, .28);
+  --card-shadow: rgba(43, 35, 32, .14);
+  --open-fg: #1D3E2C;   --open-bg: #CFE0D5;
+  --soon-fg: #7A5514;   --soon-bg: #EFDCBA;
+  --closed-fg: #3E352E; --closed-bg: #DCD2C6;
+  --success-text: #2F5A43;
+  --error-text: #8E2828;
+  --warning-text: #7A5514;
 }
 
-html { background: #E7DECB; }
+/* ── 用途色：深色主題「藥櫃夜色」 ──
+   不是把顏色反相：底色取藥櫃在暗處的深胡桃，字用瓷罐米白，點綴仍是黃銅。
+   由 <html data-theme="dark"> 觸發；data-theme 由 index.html 開頭的腳本與切換鈕設定。 */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-page: #120E0B;
+  --bg-glow: rgba(176, 141, 87, .07);
+  --bg-card: #1C1612;
+  --bg-panel: #241D17;
+  --bg-surface: #2D241C;
+  --bg-highlight: #362B21;
+  --border: #3D3228;
+  --text: #EDE4D4;
+  --text-muted: #B5A695;
+  --text-strong: #F4EFE4;
+  --text-accent: #CFAE74;
+  --text-closed: #A39585;
+  --btn-bg: #6B4B31;       /* 藥櫃棕在深底上會糊掉，提亮一階 */
+  --btn-fg: #F4EFE4;
+  --btn-shadow: rgba(0, 0, 0, .45);
+  --card-shadow: rgba(0, 0, 0, .55);
+  --open-fg: #BFE0CB;   --open-bg: #22382C;
+  --soon-fg: #F0D3A0;   --soon-bg: #3D2F17;
+  --closed-fg: #D8CCBE; --closed-bg: #3A322B;
+  --success-text: #8FC7A4;
+  --error-text: #EE9A9A;
+  --warning-text: #E6BD78;
+}
+
+html { background: var(--bg-page); }
 body {
   margin: 0;
-  color: var(--ink);
+  color: var(--text);
   font-family: Arial, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
-  background: radial-gradient(circle at 15% 0%, rgba(176, 141, 87, .16), transparent 34rem), #E7DECB;
+  background: radial-gradient(circle at 15% 0%, var(--bg-glow), transparent 34rem), var(--bg-page);
 }
 button { font: inherit; cursor: pointer; border: 0; font-weight: 800; }
 button:disabled { cursor: wait; opacity: .6; }
@@ -42,8 +93,8 @@ main {
   width: min(100%, 560px);
   min-height: 100vh;
   margin: 0 auto;
-  background: var(--paper);
-  box-shadow: 0 0 60px rgba(43, 35, 32, .14);
+  background: var(--bg-card);
+  box-shadow: 0 0 60px var(--card-shadow);
 }
 
 .visually-hidden {
@@ -55,7 +106,10 @@ main {
 /* ── 店招 ── */
 .masthead {
   position: relative;
+  /* 裁掉右上角的裝飾圓環。hidden 仍是「可捲動容器」——鍵盤 Tab 或 scrollIntoView
+     會把整個店招往旁邊推（實測偏移 91px）。clip 只裁切、不能捲；舊瀏覽器退回 hidden。 */
   overflow: hidden;
+  overflow: clip;
   padding: 26px 24px 30px;
   color: white;
   /* 底圖是店內藥櫃的插畫，上面壓一層藥櫃棕。
@@ -81,7 +135,7 @@ main {
 }
 .brand-row { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 
-/* 店徽：朱紅印章式的「喆」。
+/* 店徽：白底紅字的「喆」（2026-09-21 使用者要求，原為紅底白字）。
    原本是西藥局綠十字——中藥行掛醫療十字等於掛錯招牌；
    而十字改成朱紅就成了紅十字（日內瓦公約的保護標誌），更不能用。
    所以整個換掉。用 CSS 畫，不依賴任何圖檔。 */
@@ -90,13 +144,33 @@ main {
   align-items: center; justify-content: center;
   width: 38px; height: 38px;
   border-radius: 6px;
-  background: var(--vermilion);
+  background: #fff;
   box-shadow: 0 6px 16px rgba(30, 14, 8, .28);
-  color: var(--paper);
+  color: var(--vermilion);
   font-size: 21px; font-weight: 700; line-height: 1;
   font-family: "Noto Serif TC", "Songti TC", "PingFang TC", serif;
 }
 .seal::before { content: "喆"; }
+
+.brand-controls { display: flex; align-items: center; gap: 8px; }
+
+/* 深淺色切換鈕：跟語言切換同一套半透明外框，坐在店招上。
+   淺色時顯示月亮（按了變深色），深色時顯示太陽（按了變淺色）。 */
+.theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; flex: none;
+  padding: 0;
+  color: rgba(244, 239, 228, .9);
+  border: 1px solid rgba(244, 239, 228, .38); border-radius: 999px;
+  background: rgba(25, 14, 6, .26);
+  transition: background .2s;
+}
+.theme-toggle:hover { background: rgba(25, 14, 6, .42); }
+.theme-toggle:focus-visible { outline: 3px solid rgba(244, 239, 228, .6); outline-offset: 2px; }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
 .language-switch { display: inline-flex; padding: 3px; border: 1px solid rgba(244, 239, 228, .38); border-radius: 999px; background: rgba(25, 14, 6, .26); }
 .language-switch button { padding: 7px 11px; color: rgba(244, 239, 228, .80); border-radius: 999px; background: transparent; font-size: 11px; white-space: nowrap; transition: color .2s, background .2s; }
@@ -124,10 +198,10 @@ h1 {
   font-weight: 800;
 }
 .open-state::before { content: "● "; }
-.open-state.is-open   { color: #1D3E2C; background: #CFE0D5; }
-.open-state.is-soon   { color: var(--soon); background: #EFDCBA; }
+.open-state.is-open   { color: var(--open-fg); background: var(--open-bg); }
+.open-state.is-soon   { color: var(--soon-fg); background: var(--soon-bg); }
 /* 休息中用灰褐，不用紅：見 --closed 的說明 */
-.open-state.is-closed { color: #3E352E; background: #DCD2C6; }
+.open-state.is-closed { color: var(--closed-fg); background: var(--closed-bg); }
 
 /* ── 兩顆主要動作：撥電話、導航 ── */
 .primary-actions { position: relative; z-index: 1; display: grid; gap: 10px; margin-top: 22px; }
@@ -135,7 +209,7 @@ h1 {
   display: block;
   padding: 14px 16px;
   border-radius: 14px;
-  background: var(--paper);
+  background: var(--bg-surface);
   text-decoration: none;
   box-shadow: 0 8px 20px rgba(24, 12, 6, .24);
 }
@@ -144,65 +218,67 @@ h1 {
 .action-call { background: var(--vermilion); }
 .action-call .action-label { color: rgba(244, 239, 228, .82); }
 .action-call .action-value { color: #fff; }
-.action-label { display: block; color: var(--wood-dark); font-size: 11px; font-weight: 800; letter-spacing: .12em; }
-.action-value { display: block; margin-top: 4px; color: var(--ink); font-size: 17px; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; }
+.action-label { display: block; color: var(--text-strong); font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+.action-value { display: block; margin-top: 4px; color: var(--text); font-size: 17px; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; }
 .action-map .action-value { font-size: 15px; font-weight: 700; }
 .action:active { transform: translateY(1px); }
+/* 深色主題下導航卡的底色跟店招很接近，加一圈淡邊框才看得出是一顆按鈕 */
+:root[data-theme="dark"] .action-map { box-shadow: inset 0 0 0 1px rgba(244, 239, 228, .16), 0 8px 20px rgba(0, 0, 0, .4); }
 
 /* ── 內容區塊 ── */
-.panel { margin: 22px 24px 0; padding: 22px 20px; border: 1px solid var(--line); border-radius: 18px; background: #FBF7EF; }
-.step { margin: 0 0 7px; color: var(--brass-ink); font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+.panel { margin: 22px 24px 0; padding: 22px 20px; border: 1px solid var(--border); border-radius: 18px; background: var(--bg-panel); }
+.step { margin: 0 0 7px; color: var(--text-accent); font-size: 12px; font-weight: 800; letter-spacing: .16em; }
 h2 { font-size: 23px; letter-spacing: -.03em; }
 /* 黃銅分隔線：漸層在這裡是「線的收尾」，不是色塊 */
 .panel h2::after {
   content: ""; display: block; width: 74px; height: 2px; margin-top: 10px;
   background: linear-gradient(90deg, var(--brass), rgba(176, 141, 87, 0));
 }
-.body-text { margin-top: 12px; color: var(--muted); font-size: 14px; line-height: 1.75; }
-.note { margin-top: 14px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.body-text { margin-top: 12px; color: var(--text-muted); font-size: 14px; line-height: 1.75; }
+.note { margin-top: 14px; color: var(--text-muted); font-size: 12px; line-height: 1.6; }
 
 .hours-table { width: 100%; margin-top: 14px; border-collapse: collapse; }
-.hours-table th, .hours-table td { padding: 9px 4px; border-bottom: 1px solid var(--line); text-align: left; font-size: 14px; }
-.hours-table th { width: 5.5em; color: var(--muted); font-weight: 700; }
+.hours-table th, .hours-table td { padding: 9px 4px; border-bottom: 1px solid var(--border); text-align: left; font-size: 14px; }
+.hours-table th { width: 5.5em; color: var(--text-muted); font-weight: 700; }
 .hours-table td { font-weight: 700; font-variant-numeric: tabular-nums; }
-.hours-table td.closed { color: var(--closed); font-weight: 400; }
+.hours-table td.closed { color: var(--text-closed); font-weight: 400; }
 .hours-table tr:last-child th, .hours-table tr:last-child td { border-bottom: 0; }
-.hours-table tr.today th, .hours-table tr.today td { color: var(--wood-dark); background: var(--pale); }
+.hours-table tr.today th, .hours-table tr.today td { color: var(--text-strong); background: var(--bg-highlight); }
 .hours-table tr.today th::after { content: " ●"; font-size: 9px; vertical-align: middle; }
 
 .service-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-.service-list li { padding: 8px 11px; color: var(--wood-dark); border: 1px solid var(--line); border-radius: 999px; background: var(--paper); font-size: 13px; font-weight: 700; }
+.service-list li { padding: 8px 11px; color: var(--text-strong); border: 1px solid var(--border); border-radius: 999px; background: var(--bg-surface); font-size: 13px; font-weight: 700; }
 
 /* ── LINE ── */
-.line-connect { display: grid; grid-template-columns: 1fr; gap: 16px; border-color: var(--line); background: #FBF7EF; }
+.line-connect { display: grid; grid-template-columns: 1fr; gap: 16px; border-color: var(--border); background: var(--bg-panel); }
 .line-connect:has(.line-qr:not([hidden])) { grid-template-columns: 1fr 132px; align-items: center; }
-.line-kicker { margin: 0 0 6px; color: var(--brass-ink); font-size: 12px; font-weight: 900; letter-spacing: .16em; }
+.line-kicker { margin: 0 0 6px; color: var(--text-accent); font-size: 12px; font-weight: 900; letter-spacing: .16em; }
 .line-copy h2 { font-size: 21px; }
-.line-copy > p:not(.line-kicker) { margin: 8px 0 14px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.line-copy > p:not(.line-kicker) { margin: 8px 0 14px; color: var(--text-muted); font-size: 13px; line-height: 1.55; }
 .line-button { display: inline-block; padding: 11px 15px; color: white; border-radius: 11px; background: #06c755; text-decoration: none; font-size: 14px; font-weight: 800; box-shadow: 0 8px 18px rgba(6, 199, 85, .18); }
 .line-qr { display: block; padding: 6px; border-radius: 14px; background: #fff; box-shadow: 0 6px 18px rgba(43, 35, 32, .12); }
 .line-qr img { display: block; width: 100%; height: auto; border-radius: 9px; }
 
 /* ── 儲存聯絡人 ── */
-.primary { width: 100%; margin-top: 20px; padding: 16px; color: var(--paper); border-radius: 14px; background: var(--wood); box-shadow: 0 10px 24px rgba(74, 53, 36, .28); }
+.primary { width: 100%; margin-top: 20px; padding: 16px; color: var(--btn-fg); border-radius: 14px; background: var(--btn-bg); box-shadow: 0 10px 24px var(--btn-shadow); }
 .primary:active { transform: translateY(1px); }
-.footnote { margin: 12px 8px 0; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.5; }
-.footnote.error { color: #8E2828; font-weight: 700; }
-.footnote.warning { color: var(--soon); font-weight: 700; }
+.footnote { margin: 12px 8px 0; color: var(--text-muted); text-align: center; font-size: 12px; line-height: 1.5; }
+.footnote.error { color: var(--error-text); font-weight: 700; }
+.footnote.warning { color: var(--warning-text); font-weight: 700; }
 
 .manual-fallback {
   display: block; margin: 10px 8px 0; padding: 12px;
-  border: 1px dashed var(--brass); border-radius: 12px; background: var(--pale);
-  color: var(--wood-dark); text-align: center; font-size: 13px; font-weight: 800; text-decoration: none;
+  border: 1px dashed var(--brass); border-radius: 12px; background: var(--bg-highlight);
+  color: var(--text-strong); text-align: center; font-size: 13px; font-weight: 800; text-decoration: none;
 }
 .save-result {
   margin: 18px 0 0; padding: 18px 18px 16px;
-  border: 1px solid var(--line); border-radius: 16px;
-  background: var(--paper); text-align: center;
+  border: 1px solid var(--border); border-radius: 16px;
+  background: var(--bg-surface); text-align: center;
 }
-.save-result-title { margin: 0; color: var(--open); font-size: 16px; font-weight: 900; }
+.save-result-title { margin: 0; color: var(--success-text); font-size: 16px; font-weight: 900; }
 .save-result-title::before { content: "✓ "; }
-.save-result-body { margin: 8px 0 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.save-result-body { margin: 8px 0 14px; color: var(--text-muted); font-size: 13px; line-height: 1.6; }
 .save-result-action {
   display: block; padding: 13px 16px; color: var(--paper); border-radius: 12px;
   background: var(--open); font-size: 15px; font-weight: 800; text-decoration: none;
@@ -210,7 +286,7 @@ h2 { font-size: 23px; letter-spacing: -.03em; }
 }
 .save-result-action:active { transform: translateY(1px); }
 
-.card-footer { padding: 26px 24px 34px; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.7; }
+.card-footer { padding: 26px 24px 34px; color: var(--text-muted); text-align: center; font-size: 12px; line-height: 1.7; }
 
 @media (min-width: 700px) {
   body { padding: 36px 0; }
@@ -221,6 +297,8 @@ h2 { font-size: 23px; letter-spacing: -.03em; }
   .masthead { padding: 22px 18px 26px; }
   .panel { margin: 18px 16px 0; padding: 18px 16px; }
   .language-switch button { padding: 6px 8px; font-size: 10px; }
+  .brand-controls { gap: 6px; }
+  .theme-toggle { width: 32px; height: 32px; }
   .line-connect:has(.line-qr:not([hidden])) { grid-template-columns: 1fr 108px; gap: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
