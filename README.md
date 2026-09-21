@@ -1,10 +1,7 @@
 # 喆安藥行 電子名片
 
-> **暫存位置說明**：本 repo 的慣例是「程式類專案各自獨立成 repo」。
-> 這個專案原本要開在獨立 repo `zhean-pharmacy`，但本 session 的 GitHub App
-> 沒有建立 repo 的權限（`POST /user/repos` 回 403），因此先暫存在 ai-workspace
-> 保存工作成果。開好獨立 repo 之後，把 `projects/zhean-pharmacy/` 整個搬過去、
-> 從 ai-workspace 移除，並刪掉這段說明即可（搬移指令見本檔最後一節）。
+**線上名片**：https://lucaslu916-coder.github.io/zhean-pharmacy/
+（NFC／QR 寫這條根網址，不要寫 `/card/`——原因見下方「網址架構」）
 
 NFC 貼紙／QR Code 掃出來就是這張卡：可一鍵撥電話、開啟導航、加 LINE，
 把店家存進手機通訊錄，並且會告訴客人「現在有沒有開」。
@@ -14,15 +11,18 @@ NFC 貼紙／QR Code 掃出來就是這張卡：可一鍵撥電話、開啟導�
 
 ---
 
-## 現在該做什麼：填資料
+## 改資料的流程
 
-網站本身已經做完並測過了，**缺的只有真實資料**。
-
-1. 打開 `card/config.js`，把所有標著 `TODO` 的欄位換成真的內容
+1. 打開 `card/config.js` 修改
 2. 跑 `npm run vcf` 重新產生聯絡人檔
-3. 跑 `npm test`，全部通過才算可以上線
+3. 跑 `npm test`，全部通過才可以 push
+4. push 之後**到線上網址確認**，不要只看本機（見下方「線上與本機不一樣的地方」）
 
-沒填完之前 `npm test` 會失敗並直接列出還差哪幾欄——這是刻意的。
+任何欄位寫成 `TODO`，`npm test` 都會失敗並列出清單——這是刻意的。
+
+**選填區塊**：`line.url` 與 `about` 目前是 `null`，代表「這一區不顯示」，頁面上整塊不會出現。
+資料到了照 `config.js` 裡的註解格式填回即可。`null` 與 `TODO` 的差別：
+`TODO` 是「應該有、還沒填」（會擋），`null` 是「這一區目前不要」（可上線）。
 一張名片最糟的失敗不是當掉，而是安靜地掛著錯的電話或錯的營業時間，
 沒有人發現，直到客人白跑一趟。
 
@@ -146,21 +146,21 @@ npm test
 
 ---
 
-## 搬到獨立 repo
+## 線上與本機不一樣的地方
 
-在 GitHub 上開一個空的 public repo `zhean-pharmacy`（不要勾 Add a README），然後：
+這兩件事都是本機測試全過、線上卻壞掉的前例，改東西時要記得：
+
+**聯絡人檔的換行**：vCard 規格要求 CRLF。Windows 的 git 預設會在提交時把 CR 剝掉，
+而 GitHub Pages 發布的是 repo 裡那份，本機測試看的卻是工作目錄那份——所以本機全綠、
+線上不合規格。`.gitattributes` 裡的 `*.vcf -text` 就是為此而設，**不要刪**。
+要確認線上那份：
 
 ```bash
-cd projects/zhean-pharmacy
-git init -b main
-git add -A
-git commit -m "喆安藥行電子名片：轉址層、三語名片頁、營業狀態與存聯絡人"
-git remote add origin https://github.com/lucaslu916-coder/zhean-pharmacy.git
-git push -u origin main
+curl -s https://lucaslu916-coder.github.io/zhean-pharmacy/card/Zhe-An-Pharmacy.vcf | tr -cd '\r' | wc -c
 ```
 
-推完之後到 repo 的 **Settings → Pages**，Source 選 **Deploy from a branch**，
-分支 `main`、目錄 `/ (root)`，並啟用 **Enforce HTTPS**。約一分鐘後
-`https://lucaslu916-coder.github.io/zhean-pharmacy/` 就會自動轉到名片頁。
+結果要等於行數（目前是 15），是 0 就代表 CR 被剝掉了。
 
-搬完記得把 `projects/zhean-pharmacy/` 從 ai-workspace 移除，避免兩份各改各的。
+**圖片快取**：GitHub Pages 對靜態檔給長效快取。換了 `shop-interior.webp` 或
+`social-preview.jpg` 但網址沒變，回訪的客人與 LINE／Facebook 的預覽都會繼續用舊圖。
+換圖時把 `styles.css` 與 `index.html` 裡的 `?v=` 版號一起 +1。
