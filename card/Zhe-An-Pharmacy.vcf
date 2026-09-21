@@ -1,0 +1,15 @@
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Zhe-An Pharmacy//Digital Business Card//ZH-TW
+N;CHARSET=UTF-8:;;;;
+FN;CHARSET=UTF-8:喆安藥行
+ORG;CHARSET=UTF-8:喆安藥行
+X-ABShowAs:COMPANY
+TEL;TYPE=WORK,VOICE:+886-2-2222-1614
+ADR;TYPE=WORK;CHARSET=UTF-8:;;民治街5巷1號;中和區;新北市;235;台
+ 灣
+URL:https://lucaslu916-coder.github.io/zhean-pharmacy/card/
+NOTE;CHARSET=UTF-8:負責人：呂凱文\n營業時間：\n一–六 10:00
+ –19:00\n日 公休
+REV:20260101T000000Z
+END:VCARD

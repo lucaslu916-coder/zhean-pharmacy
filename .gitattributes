@@ -1,0 +1,10 @@
+# vCard 規格（RFC 2426 / 6350）要求換行必須是 CRLF。
+# Windows 上 git 的 autocrlf 會在提交時把 CR 剝掉，存進 repo 的就只剩 LF，
+# 而 GitHub Pages 發布的是 repo 裡那份——本機測試看的是工作目錄，會全部綠燈，
+# 上線的卻是不合規格的檔。-text 讓 git 原封不動保存位元組。
+*.vcf -text
+
+# 圖片本來就是二進位，明寫出來避免任何工具誤判
+*.webp binary
+*.jpg  binary
+*.png  binary

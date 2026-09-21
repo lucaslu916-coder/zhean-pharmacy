@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>喆安藥行｜電子名片</title>
+
+<!-- ===================================================================
+     永久入口轉址層 (permanent entry redirect)
+
+     NFC 標籤與所有對外 QR Code 一律寫這一頁的網址，永不變更。
+     要更換名片網站時，只需修改下方兩處 TARGET，其餘一切自動生效——
+     已經貼出去的 NFC 貼紙與已經印出去的 QR Code 完全不必重做。
+
+     這一層不是多此一舉：Lucas Lu 那張名片就是靠它，在發布平台停用、
+     整個網站必須搬家時，一片 NFC 標籤都沒有重寫。
+
+     目前目標站台：本 repo 的 card/
+     =================================================================== -->
+
+<link rel="canonical" href="https://lucaslu916-coder.github.io/zhean-pharmacy/card/">
+<meta http-equiv="refresh" content="0; url=https://lucaslu916-coder.github.io/zhean-pharmacy/card/">
+<link rel="icon" href="card/favicon.svg" type="image/svg+xml">
+
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    margin: 0; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: #F4EFE4; color: #2B2320;   /* 瓷罐米白、墨黑，與名片頁一致 */
+  }
+  main { text-align: center; max-width: 22rem; }
+  .name { font-size: 1.35rem; font-weight: 700; letter-spacing: .01em; }
+  .role { margin-top: .35rem; font-size: .9rem; color: #6E5F54; }
+  .msg  { margin-top: 1.5rem; font-size: .9rem; color: #6E5F54; line-height: 1.6; }
+  .btn {
+    display: inline-block; margin-top: 1.1rem; padding: .7rem 1.4rem;
+    border-radius: 999px; background: #A83232; color: #fff;   /* 招牌朱紅 */
+    font-size: .95rem; font-weight: 600; text-decoration: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #2B2320; color: #F4EFE4; }
+    .role, .msg { color: #C9B79A; }
+    .btn { background: #C24545; color: #fff; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="name">喆安藥行</p>
+  <p class="role">Zhe-An Pharmacy</p>
+  <p class="msg">正在開啟電子名片…<br><span lang="en">Opening digital business card…</span></p>
+  <a class="btn" id="go" href="https://lucaslu916-coder.github.io/zhean-pharmacy/card/">
+    手動開啟　Open manually
+  </a>
+</main>
+
+<script>
+  // 目標網址：更換名片站台時只需改這一行（上方 meta refresh 與 canonical 要一起改）
+  var TARGET = "https://lucaslu916-coder.github.io/zhean-pharmacy/card/";
+
+  // 保留查詢字串與錨點，方便日後做來源追蹤（例如 ?src=nfc、?src=bag 分辨是貼紙還是藥袋）
+  var target = TARGET + location.search + location.hash;
+  document.getElementById("go").href = target;
+
+  // replace 不留下歷史紀錄，使用者按上一頁不會被彈回來
+  location.replace(target);
+</script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+/* 喆安藥行電子名片。自 Lucas Lu 電子名片的樣式基礎改寫，
+   配色取自店面與店內照片（藥櫃棕、招牌朱紅、瓷罐米白、雨棚墨綠、銅杵黃銅），
+   不用西藥局綠十字那一套；版面由「人」改為「店」：
+   主角是電話與導航兩顆大按鈕，不是大頭照。
+   不需要任何建置工具，樣式自足。 */
+
+*, *::before, *::after { box-sizing: border-box; }
+h1, h2, h3, p, ul, table { margin: 0; }
+ul { padding: 0; list-style: none; }
+img { max-width: 100%; }
+a { color: inherit; }
+[hidden] { display: none !important; }
+
+:root {
+  /* 色票取自店家照片。改色改這裡。 */
+  --ink: #2B2320;          /* 墨黑：內文，帶褐不用純黑 */
+  --muted: #6E5F54;
+  --wood: #4A3524;         /* 藥櫃棕：主色 */
+  --wood-dark: #3A2A1C;
+  --vermilion: #A83232;    /* 招牌朱紅：全頁唯一的主要動作 */
+  --paper: #F4EFE4;        /* 瓷罐米白：卡片底 */
+  --pale: #EDE4D4;
+  --line: #DCCFBB;
+  --brass: #B08D57;        /* 銅杵黃銅：分隔線與細節 */
+  --brass-ink: #8A6A3A;    /* 黃銅當文字色要壓深才夠對比 */
+  --open: #2F5A43;         /* 雨棚墨綠：營業中 */
+  --closed: #6B5E52;       /* 休息中刻意不用紅——紅是招牌色與主按鈕，不能拿去表示關門 */
+  --soon: #7A5514;
+}
+
+html { background: #E7DECB; }
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: Arial, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  background: radial-gradient(circle at 15% 0%, rgba(176, 141, 87, .16), transparent 34rem), #E7DECB;
+}
+button { font: inherit; cursor: pointer; border: 0; font-weight: 800; }
+button:disabled { cursor: wait; opacity: .6; }
+
+main {
+  width: min(100%, 560px);
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--paper);
+  box-shadow: 0 0 60px rgba(43, 35, 32, .14);
+}
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+/* ── 店招 ── */
+.masthead {
+  position: relative;
+  overflow: hidden;
+  padding: 26px 24px 30px;
+  color: white;
+  /* 底圖是店內藥櫃的插畫，上面壓一層藥櫃棕。
+     為什麼要壓：店名、營業狀態都是淺色字，直接鋪有明暗的插畫，字會在亮處消失。
+     background-color 先給純色——圖還沒載到（NFC 一碰就開的那半秒）也不會破版；
+     圖若完全載不到，只剩半透明的棕疊在棕底上，看起來仍然是原本的純色店招。 */
+  background-color: var(--wood);
+  background-image:
+    linear-gradient(176deg, rgba(74, 53, 36, .80) 0%, rgba(43, 31, 20, .91) 100%),
+    /* ?v= 是版號，不是裝飾。換圖時把它 +1，否則瀏覽器會繼續用快取裡的舊圖——
+       GitHub Pages 對靜態檔會給長效快取，換了圖但沒換網址，老客人看到的還是舊版。 */
+    url("shop-interior.webp?v=2");
+  background-size: cover;
+  background-position: center 42%;
+}
+.masthead::after {
+  content: "";
+  position: absolute;
+  width: 230px; height: 230px;
+  right: -126px; top: -75px;
+  border: 30px solid rgba(244, 239, 228, .04);
+  border-radius: 50%;
+}
+.brand-row { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+
+/* 店徽：朱紅印章式的「喆」。
+   原本是西藥局綠十字——中藥行掛醫療十字等於掛錯招牌；
+   而十字改成朱紅就成了紅十字（日內瓦公約的保護標誌），更不能用。
+   所以整個換掉。用 CSS 畫，不依賴任何圖檔。 */
+.seal {
+  display: flex;
+  align-items: center; justify-content: center;
+  width: 38px; height: 38px;
+  border-radius: 6px;
+  background: var(--vermilion);
+  box-shadow: 0 6px 16px rgba(30, 14, 8, .28);
+  color: var(--paper);
+  font-size: 21px; font-weight: 700; line-height: 1;
+  font-family: "Noto Serif TC", "Songti TC", "PingFang TC", serif;
+}
+.seal::before { content: "喆"; }
+
+.language-switch { display: inline-flex; padding: 3px; border: 1px solid rgba(244, 239, 228, .38); border-radius: 999px; background: rgba(25, 14, 6, .26); }
+.language-switch button { padding: 7px 11px; color: rgba(244, 239, 228, .80); border-radius: 999px; background: transparent; font-size: 11px; white-space: nowrap; transition: color .2s, background .2s; }
+.language-switch button.active { color: var(--wood-dark); background: var(--paper); }
+.language-switch button:focus-visible { outline: 3px solid rgba(244, 239, 228, .6); outline-offset: 2px; }
+
+h1 {
+  position: relative; z-index: 1;
+  margin-top: 26px;
+  font-size: clamp(34px, 9vw, 46px);
+  letter-spacing: -.04em;
+  line-height: 1.1;
+}
+.tagline { position: relative; z-index: 1; margin-top: 10px; font-size: 14px; line-height: 1.6; opacity: .88; }
+.pharmacist { position: relative; z-index: 1; margin-top: 8px; font-size: 14px; font-weight: 700; opacity: .95; }
+
+/* ── 今天現在有沒有開 ── */
+.open-state {
+  position: relative; z-index: 1;
+  display: inline-block;
+  margin-top: 16px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+}
+.open-state::before { content: "● "; }
+.open-state.is-open   { color: #1D3E2C; background: #CFE0D5; }
+.open-state.is-soon   { color: var(--soon); background: #EFDCBA; }
+/* 休息中用灰褐，不用紅：見 --closed 的說明 */
+.open-state.is-closed { color: #3E352E; background: #DCD2C6; }
+
+/* ── 兩顆主要動作：撥電話、導航 ── */
+.primary-actions { position: relative; z-index: 1; display: grid; gap: 10px; margin-top: 22px; }
+.action {
+  display: block;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--paper);
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(24, 12, 6, .24);
+}
+/* 撥電話是這張名片最重要的一件事：純色朱紅，不加漸層——
+   漸層會讓它看起來像裝飾，純色才像一顆可以按下去的實體按鈕。 */
+.action-call { background: var(--vermilion); }
+.action-call .action-label { color: rgba(244, 239, 228, .82); }
+.action-call .action-value { color: #fff; }
+.action-label { display: block; color: var(--wood-dark); font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+.action-value { display: block; margin-top: 4px; color: var(--ink); font-size: 17px; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; }
+.action-map .action-value { font-size: 15px; font-weight: 700; }
+.action:active { transform: translateY(1px); }
+
+/* ── 內容區塊 ── */
+.panel { margin: 22px 24px 0; padding: 22px 20px; border: 1px solid var(--line); border-radius: 18px; background: #FBF7EF; }
+.step { margin: 0 0 7px; color: var(--brass-ink); font-size: 12px; font-weight: 800; letter-spacing: .16em; }
+h2 { font-size: 23px; letter-spacing: -.03em; }
+/* 黃銅分隔線：漸層在這裡是「線的收尾」，不是色塊 */
+.panel h2::after {
+  content: ""; display: block; width: 74px; height: 2px; margin-top: 10px;
+  background: linear-gradient(90deg, var(--brass), rgba(176, 141, 87, 0));
+}
+.body-text { margin-top: 12px; color: var(--muted); font-size: 14px; line-height: 1.75; }
+.note { margin-top: 14px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+.hours-table { width: 100%; margin-top: 14px; border-collapse: collapse; }
+.hours-table th, .hours-table td { padding: 9px 4px; border-bottom: 1px solid var(--line); text-align: left; font-size: 14px; }
+.hours-table th { width: 5.5em; color: var(--muted); font-weight: 700; }
+.hours-table td { font-weight: 700; font-variant-numeric: tabular-nums; }
+.hours-table td.closed { color: var(--closed); font-weight: 400; }
+.hours-table tr:last-child th, .hours-table tr:last-child td { border-bottom: 0; }
+.hours-table tr.today th, .hours-table tr.today td { color: var(--wood-dark); background: var(--pale); }
+.hours-table tr.today th::after { content: " ●"; font-size: 9px; vertical-align: middle; }
+
+.service-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.service-list li { padding: 8px 11px; color: var(--wood-dark); border: 1px solid var(--line); border-radius: 999px; background: var(--paper); font-size: 13px; font-weight: 700; }
+
+/* ── LINE ── */
+.line-connect { display: grid; grid-template-columns: 1fr; gap: 16px; border-color: var(--line); background: #FBF7EF; }
+.line-connect:has(.line-qr:not([hidden])) { grid-template-columns: 1fr 132px; align-items: center; }
+.line-kicker { margin: 0 0 6px; color: var(--brass-ink); font-size: 12px; font-weight: 900; letter-spacing: .16em; }
+.line-copy h2 { font-size: 21px; }
+.line-copy > p:not(.line-kicker) { margin: 8px 0 14px; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.line-button { display: inline-block; padding: 11px 15px; color: white; border-radius: 11px; background: #06c755; text-decoration: none; font-size: 14px; font-weight: 800; box-shadow: 0 8px 18px rgba(6, 199, 85, .18); }
+.line-qr { display: block; padding: 6px; border-radius: 14px; background: #fff; box-shadow: 0 6px 18px rgba(43, 35, 32, .12); }
+.line-qr img { display: block; width: 100%; height: auto; border-radius: 9px; }
+
+/* ── 儲存聯絡人 ── */
+.primary { width: 100%; margin-top: 20px; padding: 16px; color: var(--paper); border-radius: 14px; background: var(--wood); box-shadow: 0 10px 24px rgba(74, 53, 36, .28); }
+.primary:active { transform: translateY(1px); }
+.footnote { margin: 12px 8px 0; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.5; }
+.footnote.error { color: #8E2828; font-weight: 700; }
+.footnote.warning { color: var(--soon); font-weight: 700; }
+
+.manual-fallback {
+  display: block; margin: 10px 8px 0; padding: 12px;
+  border: 1px dashed var(--brass); border-radius: 12px; background: var(--pale);
+  color: var(--wood-dark); text-align: center; font-size: 13px; font-weight: 800; text-decoration: none;
+}
+.save-result {
+  margin: 18px 0 0; padding: 18px 18px 16px;
+  border: 1px solid var(--line); border-radius: 16px;
+  background: var(--paper); text-align: center;
+}
+.save-result-title { margin: 0; color: var(--open); font-size: 16px; font-weight: 900; }
+.save-result-title::before { content: "✓ "; }
+.save-result-body { margin: 8px 0 14px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.save-result-action {
+  display: block; padding: 13px 16px; color: var(--paper); border-radius: 12px;
+  background: var(--open); font-size: 15px; font-weight: 800; text-decoration: none;
+  box-shadow: 0 8px 18px rgba(47, 90, 67, .26);
+}
+.save-result-action:active { transform: translateY(1px); }
+
+.card-footer { padding: 26px 24px 34px; color: var(--muted); text-align: center; font-size: 12px; line-height: 1.7; }
+
+@media (min-width: 700px) {
+  body { padding: 36px 0; }
+  main { min-height: auto; border-radius: 24px; overflow: hidden; }
+  .primary-actions { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 420px) {
+  .masthead { padding: 22px 18px 26px; }
+  .panel { margin: 18px 16px 0; padding: 18px 16px; }
+  .language-switch button { padding: 6px 8px; font-size: 10px; }
+  .line-connect:has(.line-qr:not([hidden])) { grid-template-columns: 1fr 108px; gap: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; transition: none !important; }
+}
+
+/* 使用者開了省流量就別下載背景圖——名片的重點是電話號碼，不是氣氛 */
+@media (prefers-reduced-data: reduce) {
+  .masthead { background-image: none; }
+}

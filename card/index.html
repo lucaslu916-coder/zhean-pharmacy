@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>喆安藥行｜電子名片</title>
+<meta name="description" content="喆安藥行的聯絡方式、營業時間與導航。可一鍵撥電話、開啟導航、加 LINE，或把聯絡人存進手機。">
+<meta property="og:title" content="喆安藥行｜電子名片">
+<meta property="og:description" content="喆安藥行的聯絡方式、營業時間與導航。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://lucaslu916-coder.github.io/zhean-pharmacy/card/">
+<!-- 分享預覽圖。LINE／Facebook 的爬蟲只吃絕對網址，相對路徑會被忽略、預覽變一片空白。 -->
+<meta property="og:image" content="https://lucaslu916-coder.github.io/zhean-pharmacy/card/social-preview.jpg?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="喆安藥行店內的木製中藥櫃與白色瓷藥罐">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+<!-- 中文版內容直接寫在 HTML 裡：JS 失效時名片仍然完整可讀、可撥號、可導航。
+     只有「今天現在有沒有開」這一格需要 JS，沒有 JS 時會退回完整的營業時間表。 -->
+</head>
+<body>
+<main id="card" lang="zh-Hant">
+
+  <section class="masthead" aria-labelledby="shop-name">
+    <div class="brand-row">
+      <span class="seal" aria-hidden="true"></span>
+      <div class="language-switch" role="group" id="lang-group" aria-label="語言切換">
+        <button type="button" data-lang="zh" class="active" aria-pressed="true">中文</button>
+        <button type="button" data-lang="en" aria-pressed="false">English</button>
+        <button type="button" data-lang="ja" aria-pressed="false">日本語</button>
+      </div>
+    </div>
+
+    <h1 id="shop-name">喆安藥行</h1>
+    <p class="tagline" id="tagline"></p>
+    <p class="pharmacist" id="pharmacist"></p>
+
+    <p class="open-state" id="open-state" role="status" aria-live="polite" hidden></p>
+
+    <div class="primary-actions">
+      <a class="action action-call" id="call-link" href="#">
+        <span class="action-label" data-t="callLabel">撥打電話</span>
+        <span class="action-value" id="call-value"></span>
+      </a>
+      <a class="action action-map" id="map-link" href="#" target="_blank" rel="noreferrer">
+        <span class="action-label" data-t="mapLabel">開啟導航</span>
+        <span class="action-value" id="map-value"></span>
+      </a>
+    </div>
+  </section>
+
+  <section class="panel hours" aria-labelledby="hours-title">
+    <p class="step" data-t="hoursStep">營業時間</p>
+    <h2 id="hours-title">每週營業時間</h2>
+    <table class="hours-table">
+      <caption class="visually-hidden" id="hours-caption">每週營業時間</caption>
+      <tbody id="hours-body"></tbody>
+    </table>
+    <p class="note" id="hours-note"></p>
+  </section>
+
+  <section class="panel services" aria-labelledby="services-title">
+    <p class="step" data-t="servicesStep">服務項目</p>
+    <h2 id="services-title">我們提供的服務</h2>
+    <ul class="service-list" id="service-list" aria-label="服務項目"></ul>
+  </section>
+
+  <section class="panel about" id="about-section" aria-labelledby="about-title" hidden>
+    <p class="step" data-t="aboutStep">關於我們</p>
+    <h2 id="about-title"></h2>
+    <p class="body-text" id="about-body"></p>
+  </section>
+
+  <section class="panel line-connect" id="line-section" aria-labelledby="line-title" hidden>
+    <div class="line-copy">
+      <p class="line-kicker">LINE</p>
+      <h2 id="line-title">加入喆安藥行 LINE</h2>
+      <p id="line-desc">用藥問題、備藥需求，都可以直接用 LINE 詢問。</p>
+      <a class="line-button" id="line-button" href="#" target="_blank" rel="noreferrer">開啟 LINE 加好友</a>
+    </div>
+    <a class="line-qr" id="line-qr-link" href="#" target="_blank" rel="noreferrer" hidden>
+      <img id="line-qr-image" src="" alt="喆安藥行的 LINE 好友 QR Code" width="900" height="900">
+    </a>
+  </section>
+
+  <section class="panel save" aria-labelledby="save-title">
+    <p class="step" data-t="saveStep">儲存名片</p>
+    <h2 id="save-title">把喆安藥行存進手機</h2>
+    <p class="body-text" id="save-intro">存成聯絡人之後，電話、地址與營業時間都會一起帶進通訊錄，不用再回來找這一頁。</p>
+
+    <button class="primary" type="button" id="save-button">儲存到聯絡人</button>
+    <p class="footnote" id="save-footnote" role="status" aria-live="polite">手機會先開啟分享選單；請選擇「聯絡人」。若沒有此選項，可先「儲存到檔案」再開啟該檔。</p>
+
+    <div class="save-result" id="save-result" hidden role="status" aria-live="polite">
+      <p class="save-result-title" id="save-result-title"></p>
+      <p class="save-result-body" id="save-result-body"></p>
+      <a class="save-result-action" id="save-result-action" href="#"></a>
+    </div>
+
+    <a class="manual-fallback" id="manual-fallback" hidden download>長按這裡另存聯絡人檔案</a>
+  </section>
+
+  <footer class="card-footer">
+    <p id="footer-address"></p>
+  </footer>
+
+</main>
+<script type="module" src="app.js"></script>
+</body>
+</html>
