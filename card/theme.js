@@ -2,10 +2,10 @@
 //
 // 規則只有兩條：
 // 1. 客人按過切換鈕，就照他選的（記在這支手機的瀏覽器裡）。
-// 2. 沒按過，就跟著手機系統的深淺設定走，系統切換時頁面也跟著變。
+// 2. 沒按過，一律淺色——不跟著手機系統（2026-09-21 使用者決定預設淺色）。
 //
 // index.html 的 <head> 裡有一段同樣邏輯的小腳本，在畫面畫出來之前先套好主題，
-// 避免深色模式的客人一打開先閃一下白畫面。改規則時兩邊要一起改。
+// 避免選了深色的客人一打開先閃一下白畫面。改規則時兩邊要一起改。
 
 export const STORAGE_KEY = "zhean-theme";
 const VALID = new Set(["light", "dark"]);
@@ -25,11 +25,12 @@ export const writeSaved = (storage, theme) => {
   try {
     storage?.setItem(STORAGE_KEY, theme);
   } catch {
-    /* 存不了就算了：這次切換照樣生效，只是下次打開會回到系統設定 */
+    /* 存不了就算了：這次切換照樣生效，只是下次打開會回到預設的淺色 */
   }
 };
 
-export const resolveTheme = (saved, systemPrefersDark) =>
-  VALID.has(saved) ? saved : (systemPrefersDark ? "dark" : "light");
+export const DEFAULT_THEME = "light";
+
+export const resolveTheme = (saved) => (VALID.has(saved) ? saved : DEFAULT_THEME);
 
 export const nextTheme = (current) => (current === "dark" ? "light" : "dark");

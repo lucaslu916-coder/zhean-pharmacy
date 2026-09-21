@@ -16,16 +16,16 @@
 <meta property="og:image:alt" content="喆安藥行店內的木製中藥櫃與白色瓷藥罐">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<meta name="color-scheme" content="light dark">
+<!-- 只宣告 light：預設淺色，手機系統是深色時也不讓瀏覽器在樣式載入前先畫深底而閃一下。
+     客人按成深色時，styles.css 的 :root[data-theme="dark"] 會把 color-scheme 切成 dark。 -->
+<meta name="color-scheme" content="light">
 <script>
-  // 在畫面畫出來之前先套好深淺色主題，避免深色模式的客人一打開先閃一下白。
-  // 規則與 theme.js 相同：按過切換鈕就照選的，沒按過就跟著手機系統。改規則兩邊要一起改。
+  // 在畫面畫出來之前先套好主題，避免選了深色的客人一打開先閃一下白。
+  // 規則與 theme.js 相同：按過切換鈕就照選的，沒按過一律淺色。改規則兩邊要一起改。
   (function () {
     var saved = null;
     try { saved = localStorage.getItem("zhean-theme"); } catch (e) {}
-    var dark = saved === "dark" ||
-      (saved !== "light" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
-    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", saved === "dark" ? "dark" : "light");
   })();
 </script>
 <link rel="stylesheet" href="styles.css">

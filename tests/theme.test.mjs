@@ -1,19 +1,26 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { readSaved, writeSaved, resolveTheme, nextTheme, STORAGE_KEY } from "../card/theme.js";
+import { readSaved, writeSaved, resolveTheme, nextTheme, STORAGE_KEY, DEFAULT_THEME } from "../card/theme.js";
 
 /* ── 主題判斷 ── */
 
-test("沒按過切換鈕：跟著手機系統", () => {
-  assert.equal(resolveTheme(null, true), "dark");
-  assert.equal(resolveTheme(null, false), "light");
-  assert.equal(resolveTheme(null, undefined), "light"); // 舊瀏覽器沒有 matchMedia
+test("沒按過切換鈕：預設淺色（使用者決定，不跟著手機系統）", () => {
+  assert.equal(DEFAULT_THEME, "light");
+  assert.equal(resolveTheme(null), "light");
 });
 
-test("按過切換鈕：照客人選的，不管系統", () => {
-  assert.equal(resolveTheme("light", true), "light");
-  assert.equal(resolveTheme("dark", false), "dark");
+test("按過切換鈕：照客人選的", () => {
+  assert.equal(resolveTheme("light"), "light");
+  assert.equal(resolveTheme("dark"), "dark");
+});
+
+// index.html 開頭有一段同邏輯的小腳本（為了在畫面出現前就套好主題），
+// 兩邊規則必須一致；這裡確認它沒有偷偷去讀系統深淺設定。
+test("<head> 的預載腳本也是預設淺色，且不讀系統設定", () => {
+  const html = readFileSync(new URL("../card/index.html", import.meta.url), "utf8");
+  assert.ok(!/prefers-color-scheme/.test(html), "index.html 仍在讀取系統深淺設定");
+  assert.match(html, /<meta name="color-scheme" content="light">/, "color-scheme 應只宣告 light，否則系統深色時可能先閃深底");
 });
 
 test("切換鈕在深淺之間來回", () => {

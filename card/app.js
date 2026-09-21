@@ -369,9 +369,8 @@ async function saveContact() {
 /* ──────────────────────────────────────────────────────────── */
 /* ────────────────────────────────────────────────────────────
    深淺色主題
-   <head> 的小腳本已經先套好 data-theme；這裡負責切換鈕與跟隨系統。
+   <head> 的小腳本已經先套好 data-theme；這裡負責切換鈕。預設淺色，不跟隨系統。
    ──────────────────────────────────────────────────────────── */
-const systemDark = window.matchMedia?.("(prefers-color-scheme: dark)");
 const storage = (() => { try { return window.localStorage; } catch { return null; } })();
 
 function applyTheme(theme) {
@@ -380,7 +379,7 @@ function applyTheme(theme) {
   $("theme-toggle").setAttribute("aria-pressed", String(theme === "dark"));
 }
 
-applyTheme(resolveTheme(readSaved(storage), systemDark?.matches));
+applyTheme(resolveTheme(readSaved(storage)));
 
 $("theme-toggle").addEventListener("click", () => {
   const theme = nextTheme(document.documentElement.getAttribute("data-theme"));
@@ -388,10 +387,6 @@ $("theme-toggle").addEventListener("click", () => {
   applyTheme(theme);
 });
 
-// 客人沒按過切換鈕時，手機系統切深淺色，頁面跟著變；按過就尊重他的選擇
-systemDark?.addEventListener?.("change", (e) => {
-  if (!readSaved(storage)) applyTheme(e.matches ? "dark" : "light");
-});
 
 document.querySelectorAll("#lang-group button").forEach((b) => {
   b.addEventListener("click", () => {
