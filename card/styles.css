@@ -48,6 +48,8 @@ a { color: inherit; }
   --success-text: #2F5A43;
   --error-text: #8E2828;
   --warning-text: #7A5514;
+  --seal-bg: #FFFFFF;      /* 店徽：淺色主題白底紅字 */
+  --seal-fg: #A83232;
 }
 
 /* ── 用途色：深色主題「藥櫃夜色」 ──
@@ -77,6 +79,8 @@ a { color: inherit; }
   --success-text: #8FC7A4;
   --error-text: #EE9A9A;
   --warning-text: #E6BD78;
+  --seal-bg: #A83232;      /* 店徽：深色主題反過來，紅底白字 */
+  --seal-fg: #FFFFFF;
 }
 
 html { background: var(--bg-page); }
@@ -135,7 +139,7 @@ main {
 }
 .brand-row { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 
-/* 店徽：白底紅字的「喆」（2026-09-21 使用者要求，原為紅底白字）。
+/* 店徽「喆」：淺色主題白底紅字、深色主題紅底白字，跟著切換（2026-09-21 使用者要求）。
    原本是西藥局綠十字——中藥行掛醫療十字等於掛錯招牌；
    而十字改成朱紅就成了紅十字（日內瓦公約的保護標誌），更不能用。
    所以整個換掉。用 CSS 畫，不依賴任何圖檔。 */
@@ -144,9 +148,10 @@ main {
   align-items: center; justify-content: center;
   width: 38px; height: 38px;
   border-radius: 6px;
-  background: #fff;
+  background: var(--seal-bg);
   box-shadow: 0 6px 16px rgba(30, 14, 8, .28);
-  color: var(--vermilion);
+  color: var(--seal-fg);
+  transition: background .2s, color .2s;
   font-size: 21px; font-weight: 700; line-height: 1;
   font-family: "Noto Serif TC", "Songti TC", "PingFang TC", serif;
 }

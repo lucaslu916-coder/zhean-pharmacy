@@ -92,6 +92,7 @@ const PAIRS = [
   ["success-text", "bg-surface", "存檔成功"],
   ["error-text", "bg-panel", "錯誤訊息"],
   ["warning-text", "bg-panel", "警告訊息"],
+  ["seal-fg", "seal-bg", "店徽「喆」"],
 ];
 
 for (const [themeName, t] of [["淺色", light], ["深色", dark]]) {
@@ -110,7 +111,7 @@ for (const [themeName, t] of [["淺色", light], ["深色", dark]]) {
 test("深色主題的每個用途色都有定義，沒有漏掉而沿用到淺色的", () => {
   const darkOwn = tokensIn(':root[data-theme="dark"]');
   // 只檢查用途色；品牌色（--wood、--open…）本來就是兩種主題共用
-  const semantic = Object.keys(light).filter((k) => /^(bg|text|btn)-|-(fg|bg)$|^(success|error|warning)-text$|^border$/.test(k));
+  const semantic = Object.keys(light).filter((k) => /^(bg|text|btn|seal)-|-(fg|bg)$|^(success|error|warning)-text$|^border$/.test(k));
   const missing = semantic.filter((k) => !(k in darkOwn));
   assert.deepEqual(missing, [], `深色主題缺少：${missing.join(", ")}`);
 });
