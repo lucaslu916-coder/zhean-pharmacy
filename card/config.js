@@ -66,11 +66,11 @@ export const shop = {
       vcard: ["", "", "民治街5巷1號", "中和區", "新北市", "235", "台灣"],
     },
 
-    // LINE 官方帳號或個人 LINE 的加好友連結。
-    // 目前是 null：使用者 2026-09-21 決定先上線、LINE 之後補。null 時整個 LINE 區塊不顯示。
-    // 拿到後填成字串即可，例如 "https://line.me/R/ti/p/@xxxxxxx"，然後 npm run vcf、npm test。
+    // LINE 加好友連結。2026-09-21 由負責人提供。
+    // 這是個人 LINE（/ti/p/ 開頭），不是官方帳號（@ 開頭）——加好友會直接加到負責人本人。
+    // 設為 null 時整個 LINE 區塊不顯示。
     line: {
-      url: null,
+      url: "https://line.me/ti/p/pDqmCeRzKt",
       // 有 LINE QR 圖檔時填檔名（放在 card/ 下），沒有就 null，頁面會只顯示按鈕
       qr: null,
     },
@@ -84,14 +84,15 @@ export const shop = {
   // 時間一律 24 小時制 "HH:MM"，時區固定 Asia/Taipei。
   hours: {
     weekly: {
-      // 2026-09-21 使用者要求對齊 Google 地圖上的打烊時間 19:00（原先口述為 18:00）
+      // 2026-09-21 負責人提供：週一至週五 10:00-19:00、週六 10:00-17:00、週日公休。
+      // （歷程：最初口述 18:00 → 對齊 Google 地圖改 19:00 → 負責人確認週六提早到 17:00）
       0: [],                                                   // 週日：公休
       1: [["10:00", "19:00"]],                                 // 週一
       2: [["10:00", "19:00"]],                                 // 週二
       3: [["10:00", "19:00"]],                                 // 週三
       4: [["10:00", "19:00"]],                                 // 週四
       5: [["10:00", "19:00"]],                                 // 週五
-      6: [["10:00", "19:00"]],                                 // 週六
+      6: [["10:00", "17:00"]],                                 // 週六：提早到 17:00
     },
     // 國定假日或臨時公休（YYYY-MM-DD），當天一律顯示為休息
     closedDates: [],
@@ -106,35 +107,29 @@ export const shop = {
   },
 
   // 服務項目。想加減項目直接改這個陣列，頁面會跟著變。
-  // 三項全部照店面招牌原文，未自行增補。
-  // 「地道藥材」台灣慣用寫法多為「道地」，但招牌寫的是「地道」，
-  // 這是店家自己的招牌用字，照抄不改。
+  // 2026-09-21 改用負責人自己的說法（先前三項取自招牌副標）。
+  // 招牌上的「參茸燕桂・地道藥材・貨真價實」仍保留在 tagline。
   services: [
-    {
-      zh: "參茸燕桂｜人參、鹿茸、燕窩、官桂等貴重藥材",
-      en: "Ginseng, deer antler, bird's nest and cinnamon — premium herbal ingredients",
-      ja: "参茸燕桂｜朝鮮人参・鹿茸・燕の巣・官桂などの貴重薬材",
-    },
-    {
-      zh: "地道藥材｜產地道地的中藥材",
-      en: "Authentic herbs sourced from their place of origin",
-      ja: "本場の漢方薬材｜産地にこだわった生薬",
-    },
-    {
-      zh: "代客煎藥｜依處方代客煎煮",
-      en: "Decoction service — herbs brewed to your prescription",
-      ja: "煎じ薬の代行サービス｜処方に合わせてお煎じします",
-    },
+    { zh: "中藥材販售", en: "Chinese herbal medicine", ja: "漢方薬材の販売" },
+    { zh: "代客煎藥", en: "Herb decoction service", ja: "煎じ薬の代行" },
   ],
 
-  // 「關於我們」。目前是 null：使用者 2026-09-21 決定先上線、這段之後補。
-  // null 時整個區塊不顯示——公開頁面上不能出現 TODO 字樣。
-  // 拿到後改回這個格式（三語缺一測試會擋）：
-  //   about: {
-  //     heading: { zh: "…", en: "…", ja: "…" },
-  //     body:    { zh: "…", en: "…", ja: "…" },
-  //   },
-  about: null,
+  // 「關於我們」。2026-09-21 由負責人提供：
+  //   「在地經營 40 多年貨真價實，給予藥材詢問與建議關心」
+  // 內文只調語序與標點，事實（40 多年、貨真價實、藥材詢問與建議）未增減。
+  // 設為 null 時整個區塊不顯示。
+  about: {
+    heading: {
+      zh: "在地經營 40 多年",
+      en: "Serving the neighborhood for over 40 years",
+      ja: "地元で 40 年以上",
+    },
+    body: {
+      zh: "喆安藥行在中和在地經營 40 多年，貨真價實。歡迎來店詢問藥材，我們樂意提供建議與關心。",
+      en: "Zhe-An Pharmacy has served Zhonghe for over 40 years with genuine goods at honest prices. Drop by with any questions about herbs — we are always glad to help.",
+      ja: "喆安薬局は中和で 40 年以上、確かな品を誠実な価格でお届けしてきました。薬材のことはお気軽にご相談ください。",
+    },
+  },
 
   // 藥局視覺以綠色為主：十字、健康、安心
   theme: { primary: "#1f9d55", dark: "#146c3a", accent: "#2bb673" },
