@@ -28,7 +28,21 @@
     document.documentElement.setAttribute("data-theme", saved === "dark" ? "dark" : "light");
   })();
 </script>
-<link rel="stylesheet" href="styles.css">
+<!-- asset-stamp:start — 由 npm run stamp 產生，請勿手改 -->
+<script type="importmap">
+{
+  "imports": {
+    "./config.js": "./config.js?v=9836037041",
+    "./vcard.js": "./vcard.js?v=9836037041",
+    "./save-strategy.js": "./save-strategy.js?v=9836037041",
+    "./hours.js": "./hours.js?v=9836037041",
+    "./maps.js": "./maps.js?v=9836037041",
+    "./theme.js": "./theme.js?v=9836037041"
+  }
+}
+</script>
+<link rel="stylesheet" href="styles.css?v=9836037041">
+<!-- asset-stamp:end -->
 <!-- 中文版內容直接寫在 HTML 裡：JS 失效時名片仍然完整可讀、可撥號、可導航。
      只有「今天現在有沒有開」這一格需要 JS，沒有 JS 時會退回完整的營業時間表。 -->
 </head>
@@ -125,6 +139,6 @@
   </footer>
 
 </main>
-<script type="module" src="app.js"></script>
+<script type="module" src="app.js?v=9836037041"></script>
 </body>
 </html>

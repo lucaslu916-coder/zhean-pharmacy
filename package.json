@@ -5,6 +5,7 @@
   "description": "喆安藥行電子名片：永久入口轉址層 + 純靜態名片頁。無建置步驟，git push 即發布。",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "vcf": "node scripts/build-vcf.mjs"
+    "vcf": "node scripts/build-vcf.mjs",
+    "stamp": "node scripts/stamp-assets.mjs"
   }
 }

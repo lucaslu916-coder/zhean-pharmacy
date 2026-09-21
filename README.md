@@ -13,10 +13,11 @@ NFC 貼紙／QR Code 掃出來就是這張卡：可一鍵撥電話、開啟導�
 
 ## 改資料的流程
 
-1. 打開 `card/config.js` 修改
+1. 打開 `card/config.js`（或其他 `card/` 下的檔案）修改
 2. 跑 `npm run vcf` 重新產生聯絡人檔
-3. 跑 `npm test`，全部通過才可以 push
-4. push 之後**到線上網址確認**，不要只看本機（見下方「線上與本機不一樣的地方」）
+3. 跑 `npm run stamp` 更新資源指紋（改了任何 JS 或 `styles.css` 都要跑）
+4. 跑 `npm test`，全部通過才可以 push——忘了第 2、3 步，測試會擋下並告訴你
+5. push 之後**到線上網址確認**，不要只看本機（見下方「線上與本機不一樣的地方」）
 
 任何欄位寫成 `TODO`，`npm test` 都會失敗並列出清單——這是刻意的。
 
@@ -160,6 +161,13 @@ curl -s https://lucaslu916-coder.github.io/zhean-pharmacy/card/Zhe-An-Pharmacy.v
 ```
 
 結果要等於行數（目前是 15），是 0 就代表 CR 被剝掉了。
+
+**JS／CSS 快取與新舊混用**：GitHub Pages 對靜態檔給 10 分鐘快取（`max-age=600`）。
+若 HTML 是新的、JS 卻是快取裡的舊版，頁面會新舊混用——曾實際發生：新 HTML 已套淺色，
+舊 `app.js` 依舊規則又改回深色。所以 `index.html` 載入的每個 JS／CSS 網址都帶
+`?v=內容指紋`，`app.js` 再引用的模組則由 `<script type="importmap">` 統一加上指紋。
+這段由 `npm run stamp` 產生，**不要手改**；新增 JS 模組時要登記到
+`scripts/asset-stamp.mjs` 的 `MODULES`（漏了測試會擋）。
 
 **圖片快取**：GitHub Pages 對靜態檔給長效快取。換了 `shop-interior.webp` 或
 `social-preview.jpg` 但網址沒變，回訪的客人與 LINE／Facebook 的預覽都會繼續用舊圖。
